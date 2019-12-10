@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_quotes"
+            android:icon="@drawable/ic_launcher_background"
+            android:title="My Quotes" />
+        <item
+            android:id="@+id/nav_class_quotes"
+            android:icon="@drawable/ic_launcher_background"
+            android:title="Class Quotes" />
+        <item
+            android:id="@+id/nav_global_quotes"
+            android:icon="@drawable/ic_launcher_background"
+            android:title="Global Quotes" />
+    </group>
+</menu>
