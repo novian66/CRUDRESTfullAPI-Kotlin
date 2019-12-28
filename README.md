@@ -8,3 +8,5 @@ https://ppbittp.xyz/index.php/quotes/
 https://ppbittp.xyz/index.php/quotes/q/my_quote/123456789
 
 https://ppbittp.xyz/index.php/quotes/q/class_id/6
+
+https://ppbittp.xyz/index.php/student/q/nim/123456789
