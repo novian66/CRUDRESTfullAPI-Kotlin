@@ -20,6 +20,8 @@ data class Quote(
     var title: String? = null,
     @SerializedName("description")
     var description: String? = null,
+    @SerializedName("images")
+    var image: String? = null,
     @SerializedName("created")
     var created: String? = null,
     @SerializedName("updated")

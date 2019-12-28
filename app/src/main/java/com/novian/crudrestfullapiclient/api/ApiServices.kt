@@ -3,6 +3,8 @@ package com.novian.crudrestfullapiclient.api
 import com.novian.crudrestfullapiclient.model.Message
 import com.novian.crudrestfullapiclient.model.QuoteResponse
 import com.novian.crudrestfullapiclient.model.StudentResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -16,19 +18,22 @@ interface ApiServices {
     @GET("quotes/")
     fun getAllQuotes(): Call<QuoteResponse>
     @POST("quotes/")
-    @FormUrlEncoded
+    @Multipart
     fun addQuote(
-        @Field("student_id") class_id: String,
-        @Field("title") title: String,
-        @Field("description") description: String
+        @Part("student_id") class_id: RequestBody,
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody,
+        @Part imagename: MultipartBody.Part?
     ): Call<Message>
-    @PUT("quotes/")
-    @FormUrlEncoded
+    @POST("quotes/q/edit/1")
+    @Multipart
     fun updateQuote(
-        @Field("quote_id") quote_id: String,
-        @Field("title") title: String,
-        @Field("description") description: String
+        @Part("quote_id") quote_id: RequestBody,
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody,
+        @Part imagename: MultipartBody.Part?
     ): Call<Message>
+
     @DELETE("quotes/q/quote_id/{quote_id}")
     fun deleteQuote(
         @Path("quote_id") quote_id: String

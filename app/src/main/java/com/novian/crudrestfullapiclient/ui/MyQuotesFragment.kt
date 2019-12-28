@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.novian.crudrestfullapiclient.BuildConfig
@@ -27,10 +26,9 @@ class MyQuotesFragment : Fragment(),MainView {
 
     private lateinit var presenter: MainPresenter
     private var quotes: MutableList<Quote> = mutableListOf()
-    private lateinit var adapter: Practice7MyQuotesAdapter
+    private lateinit var adapter: MyQuotesAdapter
     private val addQuoteCode = 1
     private val editQuoteCode = 2
-    private val deleteQuoteCode = 3
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_quotes, container, false)
@@ -41,22 +39,22 @@ class MyQuotesFragment : Fragment(),MainView {
 
         recyclerview_global_quotes.layoutManager = LinearLayoutManager(activity)
 
-        adapter = Practice7MyQuotesAdapter(quotes, activity!!)
+        adapter = MyQuotesAdapter(quotes, activity!!)
         recyclerview_global_quotes.adapter = adapter
         presenter =
             MainPresenter(this, CoroutineContextProvider())
         progressbar.visibility = View.VISIBLE
         presenter.getMyQuotes(BuildConfig.NIM)
         fab.setOnClickListener { view ->
-            val intent = Intent(activity!!, DetailActivity::class.java)
-            intent.putExtra(DetailActivity.REQUEST_CODE, addQuoteCode);
+            val intent = Intent(activity!!, InputQuotesActivity::class.java)
+            intent.putExtra(InputQuotesActivity.REQUEST_CODE, addQuoteCode);
             startActivityForResult(intent, addQuoteCode)
         }
-        adapter.setOnItemClickCallback(object : Practice7MyQuotesAdapter.OnItemClickCallback{
+        adapter.setOnItemClickCallback(object : MyQuotesAdapter.OnItemClickCallback{
             override fun onItemClicked(data: Quote) {
-                val intent = Intent(activity!!, DetailActivity::class.java)
-                intent.putExtra(DetailActivity.REQUEST_CODE, editQuoteCode);
-                intent.putExtra(DetailActivity.EXTRA_DATA, data)
+                val intent = Intent(activity!!, InputQuotesActivity::class.java)
+                intent.putExtra(InputQuotesActivity.REQUEST_CODE, editQuoteCode);
+                intent.putExtra(InputQuotesActivity.EXTRA_DATA, data)
                 startActivityForResult(intent,editQuoteCode)
             }
         })

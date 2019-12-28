@@ -1,5 +1,6 @@
 package com.novian.crudrestfullapiclient.api
 
+import android.util.Log
 import com.novian.crudrestfullapiclient.CoroutineContextProvider
 import com.novian.crudrestfullapiclient.MainView
 import com.novian.crudrestfullapiclient.model.Message
@@ -7,6 +8,9 @@ import com.novian.crudrestfullapiclient.model.QuoteResponse
 import com.novian.crudrestfullapiclient.model.StudentResponse
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,6 +37,33 @@ class MainPresenter (private val view: MainView,
                         }
                     }
                     override fun onFailure(call: Call<StudentResponse>, t: Throwable) {
+                        view.showMessage("Koneksi Terputus")
+                    }
+                })
+            }
+            catch (e:Exception){
+            }
+        }
+    }
+
+    fun getClassQuotes(class_id:String) {
+        view.showLoading()
+        GlobalScope.launch (context.main){
+            try {
+                ApiMain().services.getClassQuotes(class_id).enqueue(object :
+                    Callback<QuoteResponse> {
+                    override fun onResponse(
+                        call: Call<QuoteResponse>,
+                        response: Response<QuoteResponse>
+                    ) {
+                        if(response.code() == 200) {
+                            response.body()?.quotes?.let {
+                                view.resultQuote(it)
+                                view.hideLoading()
+                            }
+                        }
+                    }
+                    override fun onFailure(call: Call<QuoteResponse>, t: Throwable) {
                         view.showMessage("Koneksi Terputus")
                     }
                 })
@@ -94,11 +125,14 @@ class MainPresenter (private val view: MainView,
             }
         }
     }
-    fun addQuote(student_id:String, title:String, description: String) {
+    fun addQuote(student_id:String, title:String, description: String, fileName: MultipartBody.Part) {
         view.showLoading()
         GlobalScope.launch (context.main){
             try {
-                ApiMain().services.addQuote(student_id,title,description).enqueue(object :
+                val student_id = RequestBody.create(MediaType.parse("text/plain"), student_id)
+                val title = RequestBody.create(MediaType.parse("text/plain"), title)
+                val description = RequestBody.create(MediaType.parse("text/plain"), description)
+                ApiMain().services.addQuote(student_id,title,description,fileName).enqueue(object :
                     Callback<Message> {
                     override fun onResponse(
                         call: Call<Message>,
@@ -118,14 +152,19 @@ class MainPresenter (private val view: MainView,
                 })
             }
             catch (e:Exception){
+                Log.d("Exception", e.toString())
             }
         }
     }
-    fun updateQuote(quote_id:String, title:String, description: String) {
+
+    fun updateQuote(quote_id:String, title:String, description: String, fileName: MultipartBody.Part) {
         view.showLoading()
         GlobalScope.launch (context.main){
             try {
-                ApiMain().services.updateQuote(quote_id,title,description).enqueue(object :
+                val quote_id = RequestBody.create(MediaType.parse("text/plain"), quote_id)
+                val title = RequestBody.create(MediaType.parse("text/plain"), title)
+                val description = RequestBody.create(MediaType.parse("text/plain"), description)
+                ApiMain().services.updateQuote(quote_id,title,description,fileName).enqueue(object :
                     Callback<Message> {
                     override fun onResponse(
                         call: Call<Message>,
@@ -139,15 +178,17 @@ class MainPresenter (private val view: MainView,
                         }
                     }
                     override fun onFailure(call: Call<Message>, t: Throwable) {
-                        view.showMessage("Koneksi Terputus")
+                        view.showMessage(t.toString())
                         view.hideLoading()
                     }
                 })
             }
             catch (e:Exception){
+                Log.d("Exception", e.toString())
             }
         }
     }
+
     fun deleteQuote(quote_id: String) {
         view.showLoading()
         GlobalScope.launch (context.main){
